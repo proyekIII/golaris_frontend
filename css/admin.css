@@ -331,3 +331,50 @@ padding: 0px 20px 40px 70px;
     padding: 20px 0px 30px;
 
 }
+
+
+
+#categoryDataTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#categoryDataTable th, #categoryDataTable td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#categoryDataTable th {
+    background-color: #580b0b;
+    color: white;
+}
+
+#categoryDataTable tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #a68954;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+button:hover {
+    background-color: #391b02;
+}
+
+button.delete {
+    background-color: #a68954;
+}
+
+button.delete:hover {
+    background-color: #391b02;
+}
+
+

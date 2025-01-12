@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/product.css">
+    
     <title>Admin Dashboard</title>
 </head>
 
@@ -28,7 +30,7 @@
                 <li class="navList">
                     <a href="#">
                         <ion-icon name="folder-outline"></ion-icon>
-                        <span class="links">Content</span>
+                        <span class="links">Category</span>
                     </a>
                 </li>
                 <li class="navList">
@@ -115,23 +117,73 @@
             <div style="display:none" class="data-table userDetailsTable">
                 <div class="title">
                     <ion-icon name="folder-outline"></ion-icon>
-                    <span class="text">Content</span>
+                    <span class="text">category</span>
                 </div>
-                <div>
-                    <!-- Enter any table or section here -->
-                </div>
+                <table id="categoryDataTable">
+                    
+    <!-- Tombol Tambah Kategori -->
+    <button onclick="showAddCategoryForm()" class="add-category-btn">Tambah Kategori</button>
+
+                    <thead>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </thead>
+                    <tbody>
+                        <!-- Data Kategori akan ditambahkan di sini -->
+                    </tbody>
+                </table>
             </div>
 
             <!-- Analytics -->
-            <div style="display:none" class="data-table EditUserRole">
+            <div style="display:none" class="data-table EditUserRole" id="productTable">
                 <div class="title">
                     <ion-icon name="analytics-outline"></ion-icon>
-                    <span class="text">Analytics</span>
+                    <span class="text">Product</span>
                 </div>
-                <div>
-                    <!-- Enter any table or section here -->
+            
+                <!-- Tombol Tambah Produk -->
+                <button onclick="showAddProductForm()" class="add-product-btn">Tambah Produk</button>
+            
+                <!-- Form Tambah Produk -->
+                <div id="addProductForm" style="display: none;">
+                    <h3>Tambah Produk</h3>
+                    <form id="productForm">
+                        <label for="productName">Nama Produk:</label>
+                        <input type="text" id="productName" name="productName" required>
+                        <label for="productDescription">Deskripsi:</label>
+                        <textarea id="productDescription" name="productDescription" required></textarea>
+                        <label for="productPrice">Harga:</label>
+                        <input type="number" id="productPrice" name="productPrice" required>
+                        <label for="productStock">Stok:</label>
+                        <input type="number" id="productStock" name="productStock" required>
+                        <label for="categoryId">Kategori:</label>
+                        <select id="categoryId" name="categoryId" required>
+                            <!-- Kategori akan dimuat dari API -->
+                        </select>
+                        <button type="submit">Simpan</button>
+                        <button type="button" onclick="hideAddProductForm()">Batal</button>
+                    </form>
                 </div>
+            
+                <table id="productDataTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama</th>
+                            <th>Deskripsi</th>
+                            <th>Harga</th>
+                            <th>Stok</th>
+                            <th>Kategori</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data Produk akan ditambahkan di sini -->
+                    </tbody>
+                </table>
             </div>
+            
 
             <!--  Likes -->
             <div style="display:none" class="data-table VehicleDetails">
