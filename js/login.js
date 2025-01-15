@@ -16,7 +16,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
     if (response.ok) {
       alert('Login berhasil!');
       if (data.type === 'admin') {
-        window.location.href = '/admin-dashboard.html';
+        window.location.href = 'dashboard.html';
       } else if (data.type === 'supplier') {
         window.location.href = '/supplier-dashboard.html';
       }

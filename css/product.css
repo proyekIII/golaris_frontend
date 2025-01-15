@@ -1,0 +1,102 @@
+/* Tabel Produk */
+#productDataTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#productDataTable th, #productDataTable td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#productDataTable th {
+    background-color: #580b0b; /* Warna latar belakang header */
+    color: white; /* Warna teks header */
+    font-weight: bold;
+}
+
+#productDataTable tbody tr:hover {
+    background-color: #f1f1f1; /* Warna latar belakang baris saat dihover */
+}
+
+/* Tombol Tambah Produk */
+.add-product-btn {
+    padding: 10px 20px;
+    background-color: #a68954;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.add-product-btn:hover {
+    background-color: #391b02; /* Warna saat dihover */
+}
+
+/* Form Tambah Produk */
+#addProductForm {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#addProductForm h3 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+#addProductForm label {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+#addProductForm input, #addProductForm select, #addProductForm textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#addProductForm button {
+    padding: 10px 15px;
+    margin-top: 20px;
+    background-color: #a68954;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#addProductForm button:hover {
+    background-color: #391b02;
+}
+
+/* Tombol Batal */
+#addProductForm button[type="button"] {
+    background-color: #e1e1e1;
+    color: #333;
+}
+
+#addProductForm button[type="button"]:hover {
+    background-color: #b0b0b0;
+}
+
+/* Responsif: Menambahkan scroll pada tabel di perangkat kecil */
+@media (max-width: 768px) {
+    #productDataTable {
+        overflow-x: auto;
+        display: block;
+    }
+
+    #productDataTable th, #productDataTable td {
+        white-space: nowrap;
+    }
+}

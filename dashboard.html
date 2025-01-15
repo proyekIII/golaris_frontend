@@ -36,19 +36,19 @@
                 <li class="navList">
                     <a href="#">
                         <ion-icon name="analytics-outline"></ion-icon>
-                        <span class="links">Analytics</span>
+                        <span class="links">Product</span>
                     </a>
                 </li>
                 <li class="navList">
                     <a href="#">
                         <ion-icon name="heart-outline"></ion-icon>
-                        <span class="links">Likes</span>
+                        <span class="links">Reposrt Pesanan</span>
                     </a>
                 </li>
                 <li class="navList">
                     <a href="#">
                         <ion-icon name="chatbubbles-outline"></ion-icon>
-                        <span class="links">Comments</span>
+                        <span class="links">Reposrt Transaksi</span>
                     </a>
                 </li>
             </ul>
@@ -171,7 +171,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Nama</th>
-                            <th>Deskripsi</th>
+                            <th>Gambar</th>
                             <th>Harga</th>
                             <th>Stok</th>
                             <th>Kategori</th>
@@ -182,25 +182,40 @@
                         <!-- Data Produk akan ditambahkan di sini -->
                     </tbody>
                 </table>
+                
             </div>
             
 
             <!--  Likes -->
-            <div style="display:none" class="data-table VehicleDetails">
+            <div class="data-table VehicleDetails">
                 <div class="title">
                     <ion-icon name="heart-outline"></ion-icon>
-                    <span class="text">Vehicles</span>
+                    <span class="text">Report Pesanan</span>
                 </div>
-                <div>
-                    <!-- Enter any table or section here -->
-                </div>
+                <table id="orderDataTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th>Order Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data Pesanan akan ditampilkan di sini -->
+                    </tbody>
+                </table>
             </div>
+            
 
             <!-- Downloads section -->
             <div style="display:none" class="data-table downloads">
                 <div class="title">
                     <ion-icon name="chatbubbles-outline"></ion-icon>
-                    <span class="text">Comments</span>
+                    <span class="text">Report Transaksi</span>
                 </div>
                 <div>
                     <!-- Enter any table or section here -->
