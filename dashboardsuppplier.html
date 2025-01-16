@@ -7,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/admin.css">
     <link rel="stylesheet" href="css/product.css">
-    <link rel="icon" href="path_to_favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/category.css">
-
     
     <title>Admin Dashboard</title>
 </head>
@@ -33,7 +31,7 @@
                 <li class="navList">
                     <a href="#">
                         <ion-icon name="folder-outline"></ion-icon>
-                        <span class="links">Category</span>
+                        <span class="links">custommur</span>
                     </a>
                 </li>
                 <li class="navList">
@@ -56,6 +54,8 @@
                 </li>
             </ul>
             <ul class="bottom-link">
+                <div id="supplierName"></div>
+            
                 <li>
                     <a href="#">
                         <ion-icon name="person-circle-outline"></ion-icon>
@@ -117,16 +117,16 @@
 
             
             <!-- Content -->
-            <div class="data-table userDetailsTable">
+            <div style="display:none" class="data-table userDetailsTable">
                 <div class="title">
                     <ion-icon name="folder-outline"></ion-icon>
-                    <span class="text">Category</span>
+                    <span class="text">category</span>
                 </div>
-                
-                <!-- Tombol Tambah Kategori -->
-                <button onclick="showAddCategoryForm()" class="add-category-btn">Tambah Kategori</button>
-                
                 <table id="categoryDataTable">
+                    
+    <!-- Tombol Tambah Kategori -->
+    <button onclick="showAddCategoryForm()" class="add-category-btn">Tambah Kategori</button>
+
                     <thead>
                         <th>ID</th>
                         <th>Name</th>
@@ -137,35 +137,6 @@
                     </tbody>
                 </table>
             </div>
-            
-            <!-- Modal Overlay untuk form Add Category -->
-            <div id="addCategoryForm" class="modal-overlay">
-                <div class="modal-content">
-                    <h3>Add Category</h3>
-                    <form onsubmit="addCategory(event)">
-                        <label for="categoryName">Category Name:</label>
-                        <input type="text" id="categoryName" required>
-                        <button type="submit">Add</button>
-                        <button type="button" onclick="hideAddCategoryForm()">Cancel</button>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Modal Overlay untuk form Edit Category -->
-            <div id="editCategoryForm" class="modal-overlay">
-                <div class="modal-content">
-                    <h3>Edit Category</h3>
-                    <form onsubmit="updateCategory(event)">
-                        <input type="hidden" id="editCategoryId">
-                        <label for="editCategoryName">Category Name:</label>
-                        <input type="text" id="editCategoryName" required>
-                        <button type="submit">Update</button>
-                        <button type="button" onclick="hideEditCategoryForm()">Cancel</button>
-                    </form>
-                </div>
-            </div>
-            
-
 
             <!-- Analytics -->
             <div style="display:none" class="data-table EditUserRole" id="productTable">
@@ -178,57 +149,25 @@
                 <button onclick="showAddProductForm()" class="add-product-btn">Tambah Produk</button>
             
                 <!-- Form Tambah Produk -->
-             <!-- Modal Add Product -->
-<div id="addProductModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeAddProductModal()">&times;</span>
-        <h3>Tambah Produk</h3>
-        <form id="addProductForm" onsubmit="addProduct(event)">
-            <label for="productName">Nama Produk:</label>
-            <input type="text" id="productName" name="productName" required>
-
-            <label for="productPrice">Harga Produk:</label>
-            <input type="number" id="productPrice" name="productPrice" required>
-
-            <label for="productCategory">Kategori Produk:</label>
-            <select id="productCategory" name="productCategory" required></select>
-
-            <label for="productDescription">Deskripsi Produk:</label>
-            <textarea id="productDescription" name="productDescription" required></textarea>
-
-            <button type="submit">Simpan</button>
-            <button type="button" onclick="closeAddProductModal()">Batal</button>
-        </form>
-    </div>
-</div>
-
-<!-- Modal Edit Product -->
-<div id="editProductModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeEditProductModal()">&times;</span>
-        <h3>Edit Produk</h3>
-        <form id="editProductForm" onsubmit="updateProduct(event)">
-            <input type="hidden" id="editProductId">
-            
-            <label for="editProductName">Nama Produk:</label>
-            <input type="text" id="editProductName" name="productName" required>
-
-            <label for="editProductPrice">Harga Produk:</label>
-            <input type="number" id="editProductPrice" name="productPrice" required>
-
-            <label for="editProductCategory">Kategori Produk:</label>
-            <select id="editProductCategory" name="productCategory" required></select>
-
-            <label for="editProductDescription">Deskripsi Produk:</label>
-            <textarea id="editProductDescription" name="productDescription" required></textarea>
-
-            <button type="submit">Update</button>
-            <button type="button" onclick="closeEditProductModal()">Batal</button>
-        </form>
-    </div>
-</div>
-
-
+                <div id="addProductForm" style="display: none;">
+                    <h3>Tambah Produk</h3>
+                    <form id="productForm">
+                        <label for="productName">Nama Produk:</label>
+                        <input type="text" id="productName" name="productName" required>
+                        <label for="productDescription">Deskripsi:</label>
+                        <textarea id="productDescription" name="productDescription" required></textarea>
+                        <label for="productPrice">Harga:</label>
+                        <input type="number" id="productPrice" name="productPrice" required>
+                        <label for="productStock">Stok:</label>
+                        <input type="number" id="productStock" name="productStock" required>
+                        <label for="categoryId">Kategori:</label>
+                        <select id="categoryId" name="categoryId" required>
+                            <!-- Kategori akan dimuat dari API -->
+                        </select>
+                        <button type="submit">Simpan</button>
+                        <button type="button" onclick="hideAddProductForm()">Batal</button>
+                    </form>
+                </div>
             
                 <table id="productDataTable">
                     <thead>
@@ -289,8 +228,6 @@
     </section>
 
     <script src="js/admin.js"></script>
-    <script src="js/category.js"></script>
-    <script src="js/crud_product.js"></script>
     
     <!-- Sources for icons -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

@@ -1,0 +1,123 @@
+
+
+/* Overlay untuk modal */
+.modal-overlay {
+    display: none; /* Sembunyikan modal secara default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Transparan hitam untuk latar belakang */
+    z-index: 1000; /* Modal berada di atas konten lain */
+    animation: fadeIn 0.3s ease;
+}
+
+/* Animasi fade-in untuk modal overlay */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Style untuk modal form */
+.modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Memastikan form di tengah layar */
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1001; /* Pastikan form berada di atas overlay */
+    width: 350px; /* Lebar form */
+    animation: slideIn 0.5s ease-in-out;
+}
+
+/* Animasi slide-in dari atas */
+@keyframes slideIn {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Teks judul modal */
+.modal-content h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Label untuk form input */
+.modal-content label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+    color: #555;
+}
+
+/* Input teks dalam modal */
+.modal-content input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+/* Efek border ketika input focus */
+.modal-content input[type="text"]:focus {
+    border-color: #007bff;
+}
+
+/* Tombol submit dan cancel */
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 48%; /* Membuat tombol sebelah menyebelah */
+    margin: 0 1%;
+    background-color: #a68954;
+    color: white;
+}
+
+/* Tombol cancel dengan warna merah */
+.modal-content button[type="button"] {
+    background-color: #642626;
+}
+
+/* Hover effect untuk tombol */
+.modal-content button:hover {
+    opacity: 0.9;
+}
+
+/* Membuat layout responsif untuk tampilan kecil */
+@media (max-width: 480px) {
+    .modal-content {
+        width: 80%;
+        padding: 20px;
+    }
+    .modal-content button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+#addProductModal, #editProductModal {
+    display: none; /* Sembunyikan modal secara default */
+  }
+  
