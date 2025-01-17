@@ -27,31 +27,49 @@ async function fetchProducts() {
 }
 
 // Fungsi untuk menampilkan produk dalam tabel
+// Fungsi untuk menampilkan produk dalam tabel
 function renderProducts(products) {
   const tableBody = document.querySelector('#productDataTable tbody');
   tableBody.innerHTML = ''; // Kosongkan tabel sebelum menambahkan data baru
 
   products.forEach(product => {
-    // Mencari kategori berdasarkan category_id dari data kategori
-    const category = categories.find(cat => cat.category_id === product.category_id);
+    const category = categories.find(cat => cat.id === product.category_id);
     const categoryName = category ? category.name : 'Tidak Diketahui'; // Menampilkan kategori berdasarkan ID
 
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${product.product_id}</td>
+      <td>${product.id}</td>
       <td>${product.name}</td>
       <td><img src="${product.image_url}" alt="${product.name}" width="50"></td>
       <td>${product.price}</td>
       <td>${product.stock}</td>
       <td>${categoryName}</td>
       <td>
-        <button onclick="showEditProductModal(${product.product_id})">Edit</button>
-        <button onclick="deleteProduct(${product.product_id})">Hapus</button>
+        <button onclick="showEditProductModal(${product.id})">Edit</button>
+        <button onclick="deleteProduct(${product.id})">Hapus</button>
       </td>
     `;
     tableBody.appendChild(row);
   });
 }
+
+// Fungsi untuk mengambil kategori dan produk
+document.addEventListener('DOMContentLoaded', function () {
+  fetchCategories().then(() => {
+    fetchProducts(); // Setelah kategori diambil, baru ambil produk
+  });
+});
+
+// Perbaikan nama fungsi dan pemanggilan
+function showAddProductModal() {
+  document.getElementById('addProductModal').style.display = 'block';
+  fetchCategoriesForProduct();
+}
+
+function closeAddProductModal() {
+  document.getElementById('addProductModal').style.display = 'none';
+}
+
 
 // Fungsi untuk menambah produk
 async function addProduct(event) {

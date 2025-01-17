@@ -1,120 +1,159 @@
-// Fungsi untuk mengambil dan menampilkan kategori
-function fetchCategories() {
-    fetch('http://localhost:8000/api/categories')
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.getElementById('categoryDataTable').getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = ''; // Kosongkan tabel sebelum menambahkan data baru
+const categoryApiUrl = 'http://localhost:8000/api/categories';
 
-            data.forEach(category => {
-                const row = tableBody.insertRow();
-                row.innerHTML = `
-                    <td>${category.category_id}</td> <!-- Gunakan category_id sebagai ID -->
-                    <td>${category.name}</td>
-                    <td>
-                        <button onclick="editCategory(${category.category_id})">Edit</button>
-                        <button onclick="deleteCategory(${category.category_id})">Delete</button>
-                    </td>
-                `;
-            });
-        })
-        .catch(error => console.error('Error fetching categories:', error));
+//Fungsi untuk mengambil semua kategori
+async function fetchCategories() {
+  try {
+    const response = await fetch(categoryApiUrl);
+    const data = await response.json();
+    renderCategories(data); // Menampilkan kategori dalam tabel
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+  }
 }
 
-// Fungsi untuk menampilkan form tambah kategori
-function showAddCategoryForm() {
-    document.getElementById('addCategoryForm').style.display = 'block';
+// Fungsi untuk menampilkan kategori dalam tabel
+function renderCategories(categories) {
+  const tableBody = document.querySelector('#categoryDataTable tbody');
+  tableBody.innerHTML = ''; // Kosongkan tabel sebelum menambahkan data baru
+
+  categories.forEach(category => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${category.id}</td> <!-- Menggunakan 'id' bukan 'category_id' -->
+      <td>${category.name}</td>
+      <td>
+        <button onclick="showEditCategoryModal(${category.id})">Edit</button>
+        <button onclick="deleteCategory(${category.id})">Hapus</button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
 }
 
-// Fungsi untuk menyembunyikan form tambah kategori
-function hideAddCategoryForm() {
-    document.getElementById('addCategoryForm').style.display = 'none';
+// Fungsi untuk menampilkan modal tambah kategori
+function showAddCategoryModal() {
+  document.getElementById('addCategoryForm').style.display = 'block'; // Tampilkan modal
+}
+
+// Fungsi untuk menutup modal tambah kategori
+function closeAddCategoryModal() {
+  document.getElementById('addCategoryForm').style.display = 'none'; // Tutup modal
 }
 
 // Fungsi untuk menambah kategori
-function addCategory(event) {
-    event.preventDefault();
-    
-    const categoryName = document.getElementById('categoryName').value;
+async function addCategory(event) {
+  event.preventDefault(); // Mencegah form submit otomatis
 
-    fetch('http://localhost:8000/api/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: categoryName })
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert('Category added successfully!');
-        fetchCategories(); // Refresh data kategori setelah ditambah
-        hideAddCategoryForm(); // Sembunyikan form tambah kategori
-    })
-    .catch(error => console.error('Error adding category:', error));
+  const categoryName = document.getElementById('categoryName').value;
+
+  try {
+    const response = await fetch(categoryApiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: categoryName }),
+    });
+
+    if (response.ok) {
+      alert('Kategori berhasil ditambahkan');
+      closeAddCategoryModal(); // Tutup modal
+      const newCategory = { id: Date.now(), name: categoryName }; // Menambahkan kategori baru (id sementara)
+      renderCategories([newCategory]); // Menampilkan kategori baru di tabel tanpa reload
+    } else {
+      alert('Gagal menambahkan kategori');
+    }
+  } catch (error) {
+    console.error('Error adding category:', error);
+  }
 }
 
-// Fungsi untuk menampilkan form edit kategori
-function editCategory(categoryId) {
-    fetch(`http://localhost:8000/api/categories/${categoryId}`)
-        .then(response => {
-            // Log the raw response to see if it's valid JSON
-            console.log(response);
-            return response.text(); // Ambil respons sebagai teks
-        })
-        .then(text => {
-            try {
-                const data = JSON.parse(text); // Parsing teks ke JSON
-                document.getElementById('editCategoryId').value = data.category_id; // Gunakan category_id
-                document.getElementById('editCategoryName').value = data.name;
-                document.getElementById('editCategoryForm').style.display = 'block';
-            } catch (error) {
-                console.error('Error parsing JSON:', error); // Jika parsing gagal
-                alert('Terjadi kesalahan saat mengambil data kategori');
-            }
-        })
-        .catch(error => console.error('Error fetching category data for edit:', error));
+// Fungsi untuk menampilkan modal edit kategori
+async function showEditCategoryModal(categoryId) {
+  try {
+    const response = await fetch(`${categoryApiUrl}/${categoryId}`);
+    const category = await response.json();
+
+    // Isi form dengan data kategori yang dipilih
+    document.getElementById('editCategoryId').value = category.id; // Menggunakan 'id' bukan 'category_id'
+    document.getElementById('editCategoryName').value = category.name;
+
+    document.getElementById('editCategoryForm').style.display = 'block'; // Tampilkan modal
+  } catch (error) {
+    console.error('Error fetching category for editing:', error);
+  }
 }
 
+// Fungsi untuk memperbarui kategori
+async function updateCategory(event) {
+  event.preventDefault();
 
-// Fungsi untuk menyembunyikan form edit kategori
-function hideEditCategoryForm() {
-    document.getElementById('editCategoryForm').style.display = 'none';
-}
+  const categoryId = document.getElementById('editCategoryId').value;
+  const categoryName = document.getElementById('editCategoryName').value;
 
-// Fungsi untuk update kategori
-function updateCategory(event) {
-    event.preventDefault();
-    
-    const categoryId = document.getElementById('editCategoryId').value;
-    const categoryName = document.getElementById('editCategoryName').value;
+  try {
+    const response = await fetch(`${categoryApiUrl}/${categoryId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: categoryName }),
+    });
 
-    fetch(`http://localhost:8000/api/categories/${categoryId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: categoryName })
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert('Category updated successfully!');
-        fetchCategories(); // Refresh data kategori setelah diupdate
-        hideEditCategoryForm(); // Sembunyikan form edit kategori
-    })
-    .catch(error => console.error('Error updating category:', error));
+    if (response.ok) {
+      alert('Kategori berhasil diperbarui');
+      closeEditCategoryModal(); // Tutup modal
+      const updatedCategory = { id: categoryId, name: categoryName };
+
+      // Memperbarui nama kategori di tabel
+      const rows = document.querySelectorAll('#categoryDataTable tbody tr');
+      rows.forEach(row => {
+        if (row.children[0].textContent == categoryId) {
+          row.children[1].textContent = categoryName; // Memperbarui nama kategori di tabel
+        }
+      });
+    } else {
+      alert('Gagal memperbarui kategori');
+    }
+  } catch (error) {
+    console.error('Error updating category:', error);
+  }
 }
 
 // Fungsi untuk menghapus kategori
-function deleteCategory(categoryId) {
-    if (confirm('Are you sure you want to delete this category?')) {
-        fetch(`http://localhost:8000/api/categories/${categoryId}`, {
-            method: 'DELETE'
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert('Category deleted successfully');
-            fetchCategories(); // Refresh data kategori setelah dihapus
-        })
-        .catch(error => console.error('Error deleting category:', error));
+async function deleteCategory(categoryId) {
+  if (confirm('Apakah Anda yakin ingin menghapus kategori ini?')) {
+    try {
+      const response = await fetch(`${categoryApiUrl}/${categoryId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        alert('Kategori berhasil dihapus');
+        
+        // Menghapus baris kategori dari tabel
+        const rows = document.querySelectorAll('#categoryDataTable tbody tr');
+        rows.forEach(row => {
+          if (row.children[0].textContent == categoryId) {
+            row.remove(); // Menghapus baris kategori dari tabel
+          }
+        });
+      } else {
+        alert('Gagal menghapus kategori');
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    }
+  }
 }
 
-// Panggil fungsi fetchCategories saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function() {
-    fetchCategories();
-})};
+// Fungsi untuk menutup modal edit kategori
+function closeEditCategoryModal() {
+  document.getElementById('editCategoryForm').style.display = 'none'; // Tutup modal Edit
+}
+
+// Ambil data kategori saat halaman dimuat
+document.addEventListener('DOMContentLoaded', fetchCategories);
+
+
+

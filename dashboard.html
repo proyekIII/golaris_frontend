@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="css/product.css">
     <link rel="icon" href="path_to_favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/category.css">
-
-    
     <title>Admin Dashboard</title>
 </head>
 
@@ -45,13 +43,13 @@
                 <li class="navList">
                     <a href="#">
                         <ion-icon name="heart-outline"></ion-icon>
-                        <span class="links">Reposrt Pesanan</span>
+                        <span class="links">Report Pesanan</span>
                     </a>
                 </li>
                 <li class="navList">
                     <a href="#">
                         <ion-icon name="chatbubbles-outline"></ion-icon>
-                        <span class="links">Reposrt Transaksi</span>
+                        <span class="links">Report Transaksi</span>
                     </a>
                 </li>
             </ul>
@@ -102,7 +100,6 @@
                     </div>
                 </div> 
             </div>
-            
 
             <!-- Recent Activities -->
             <div class="data-table activityTable">
@@ -115,7 +112,6 @@
                 </div>
             </div>
 
-            
             <!-- Content -->
             <div class="data-table userDetailsTable">
                 <div class="title">
@@ -124,7 +120,7 @@
                 </div>
                 
                 <!-- Tombol Tambah Kategori -->
-                <button onclick="showAddCategoryForm()" class="add-category-btn">Tambah Kategori</button>
+                <button onclick="showAddCategoryModal()" class="add-category-btn">Tambah Kategori</button>
                 
                 <table id="categoryDataTable">
                     <thead>
@@ -137,7 +133,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             <!-- Modal Overlay untuk form Add Category -->
             <div id="addCategoryForm" class="modal-overlay">
                 <div class="modal-content">
@@ -146,11 +142,11 @@
                         <label for="categoryName">Category Name:</label>
                         <input type="text" id="categoryName" required>
                         <button type="submit">Add</button>
-                        <button type="button" onclick="hideAddCategoryForm()">Cancel</button>
+                        <button type="button" onclick="closeAddCategoryModal()">Cancel</button>
                     </form>
                 </div>
             </div>
-            
+
             <!-- Modal Overlay untuk form Edit Category -->
             <div id="editCategoryForm" class="modal-overlay">
                 <div class="modal-content">
@@ -160,97 +156,55 @@
                         <label for="editCategoryName">Category Name:</label>
                         <input type="text" id="editCategoryName" required>
                         <button type="submit">Update</button>
-                        <button type="button" onclick="hideEditCategoryForm()">Cancel</button>
+                        <button type="button" onclick="closeEditCategoryModal()">Cancel</button>
                     </form>
                 </div>
             </div>
-            
 
+            <!-- Modal Edit Product -->
+            <div id="editProductModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeEditProductModal()">&times;</span>
+                    <h3>Edit Produk</h3>
+                    <form id="editProductForm" onsubmit="updateProduct(event)">
+                        <input type="hidden" id="editProductId">
+                        
+                        <label for="editProductName">Nama Produk:</label>
+                        <input type="text" id="editProductName" name="productName" required>
 
-            <!-- Analytics -->
-            <div style="display:none" class="data-table EditUserRole" id="productTable">
-                <div class="title">
-                    <ion-icon name="analytics-outline"></ion-icon>
-                    <span class="text">Product</span>
+                        <label for="editProductPrice">Harga Produk:</label>
+                        <input type="number" id="editProductPrice" name="productPrice" required>
+
+                        <label for="editProductCategory">Kategori Produk:</label>
+                        <select id="editProductCategory" name="productCategory" required></select>
+
+                        <label for="editProductDescription">Deskripsi Produk:</label>
+                        <textarea id="editProductDescription" name="productDescription" required></textarea>
+
+                        <button type="submit">Update</button>
+                        <button type="button" onclick="closeEditProductModal()">Batal</button>
+                    </form>
                 </div>
-            
-                <!-- Tombol Tambah Produk -->
-                <button onclick="showAddProductForm()" class="add-product-btn">Tambah Produk</button>
-            
-                <!-- Form Tambah Produk -->
-             <!-- Modal Add Product -->
-<div id="addProductModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeAddProductModal()">&times;</span>
-        <h3>Tambah Produk</h3>
-        <form id="addProductForm" onsubmit="addProduct(event)">
-            <label for="productName">Nama Produk:</label>
-            <input type="text" id="productName" name="productName" required>
-
-            <label for="productPrice">Harga Produk:</label>
-            <input type="number" id="productPrice" name="productPrice" required>
-
-            <label for="productCategory">Kategori Produk:</label>
-            <select id="productCategory" name="productCategory" required></select>
-
-            <label for="productDescription">Deskripsi Produk:</label>
-            <textarea id="productDescription" name="productDescription" required></textarea>
-
-            <button type="submit">Simpan</button>
-            <button type="button" onclick="closeAddProductModal()">Batal</button>
-        </form>
-    </div>
-</div>
-
-<!-- Modal Edit Product -->
-<div id="editProductModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeEditProductModal()">&times;</span>
-        <h3>Edit Produk</h3>
-        <form id="editProductForm" onsubmit="updateProduct(event)">
-            <input type="hidden" id="editProductId">
-            
-            <label for="editProductName">Nama Produk:</label>
-            <input type="text" id="editProductName" name="productName" required>
-
-            <label for="editProductPrice">Harga Produk:</label>
-            <input type="number" id="editProductPrice" name="productPrice" required>
-
-            <label for="editProductCategory">Kategori Produk:</label>
-            <select id="editProductCategory" name="productCategory" required></select>
-
-            <label for="editProductDescription">Deskripsi Produk:</label>
-            <textarea id="editProductDescription" name="productDescription" required></textarea>
-
-            <button type="submit">Update</button>
-            <button type="button" onclick="closeEditProductModal()">Batal</button>
-        </form>
-    </div>
-</div>
-
-
-            
-                <table id="productDataTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nama</th>
-                            <th>Gambar</th>
-                            <th>Harga</th>
-                            <th>Stok</th>
-                            <th>Kategori</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Data Produk akan ditambahkan di sini -->
-                    </tbody>
-                </table>
-                
             </div>
-            
 
-            <!--  Likes -->
+            <table id="productDataTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Gambar</th>
+                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th>Kategori</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data Produk akan ditambahkan di sini -->
+                </tbody>
+            </table>
+
+            <!-- Likes -->
             <div class="data-table VehicleDetails">
                 <div class="title">
                     <ion-icon name="heart-outline"></ion-icon>
@@ -273,7 +227,6 @@
                     </tbody>
                 </table>
             </div>
-            
 
             <!-- Downloads section -->
             <div style="display:none" class="data-table downloads">
