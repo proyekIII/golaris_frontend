@@ -1,5 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    let cartItems = [];
+    try {
+        // Coba ambil dan parse data cart dari localStorage
+        cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    } catch (error) {
+        // Jika terjadi error pada parsing JSON, cartItems akan tetap kosong
+        console.error('Error parsing cart data:', error);
+        cartItems = [];
+    }
+
     const cartContainer = document.getElementById('cart-items');
     const selectAllCheckbox = document.getElementById('select-all');
     const checkoutBtn = document.getElementById('checkout-btn');
@@ -46,17 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
             calculateTotalPrice();
         });
 
-         // Menghapus item
-         const deleteButtons = document.querySelectorAll('.delete-item');
-         deleteButtons.forEach(button => {
-             button.addEventListener('click', (event) => {
-                 const index = event.target.getAttribute('data-index');
-                 cartItems.splice(index, 1);
-                 localStorage.setItem('cart', JSON.stringify(cartItems));
-                 location.reload(); // Reload halaman untuk memperbarui tampilan
-             });
-         });
- 
+        // Menghapus item
+        const deleteButtons = document.querySelectorAll('.delete-item');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const index = event.target.getAttribute('data-index');
+                cartItems.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cartItems));
+                location.reload(); // Reload halaman untuk memperbarui tampilan
+            });
+        });
 
         // Event untuk setiap checkbox item
         const selectItemCheckboxes = document.querySelectorAll('.select-item');
@@ -77,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 localStorage.setItem('cart', JSON.stringify(cartItems));
                 calculateTotalPrice();
-                location.reload(); // Refresh halaman untuk update UI
             });
         });
 
@@ -87,12 +94,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 const checkbox = document.querySelector(`.select-item[data-index="${index}"]`);
                 return checkbox.checked;
             });
-            localStorage.setItem('checkoutItems', JSON.stringify(selectedItems));
-            window.location.href = 'pesanan.html';
+
+            if (selectedItems.length === 0) {
+                alert('Pilih item yang ingin dipesan');
+                return;
+            }
+
+            // Ambil data supplier_id dari localStorage atau sesuaikan dengan data yang ada
+            const supplierId = 1; // Misalnya supplier_id 1 untuk contoh, sesuaikan dengan data yang ada
+            const orderDate = new Date().toISOString(); // Ambil tanggal saat ini
+
+            // Kirim data pesanan ke API untuk setiap item yang dipilih
+            const orderDataPromises = selectedItems.map(item => {
+                const orderData = {
+                    supplier_id: supplierId,
+                    product_id: item.id,  // Pastikan 'item.id' adalah ID produk yang valid
+                    quantity: item.quantity,
+                    order_date: orderDate,
+                };
+
+                return fetch('http://127.0.0.1:8000/api/pesanan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return Promise.reject('Gagal mengirim data');
+                    }
+                    return response.json();
+                });
+            });
+
+            // Tunggu hingga semua pesanan terkirim
+            Promise.all(orderDataPromises)
+                .then(results => {
+                    // Ambil snap_token dari respons pertama (asumsi semua pesanan menggunakan token yang sama)
+                    const snapToken = results[0].snap_token;
+                    if (snapToken) {
+                        window.location.href = `https://app.midtrans.com/snap/v2/v2/redirect?token=${snapToken}`;
+                    } else {
+                        alert('Terjadi kesalahan saat membuat pesanan');
+                    }
+                })
+                .catch(error => {
+                    console.error('Terjadi kesalahan:', error);
+                });
         });
 
         // Hitung total harga saat pertama kali
         calculateTotalPrice();
     }
 });
-

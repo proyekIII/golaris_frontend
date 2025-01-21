@@ -27,7 +27,7 @@ document.getElementById('signup-form').addEventListener('submit', function (e) {
     formData.append('password_confirmation', passwordRepeat);
 
     // Kirim data registrasi ke backend untuk mendapatkan Snap token
-    fetch('http://localhost/proyek3/public/api/register', {
+    fetch('http://127.0.0.1:8000/api/register', {
         method: 'POST',
         body: formData,
         headers: {
@@ -71,7 +71,7 @@ document.getElementById('signup-form').addEventListener('submit', function (e) {
         })
         .catch((error) => {
             console.error('Error:', error);
-            alert('An error occurred while processing your registration and payment.');
+            alert('silahkan melakukan pembayaran');
         });
 });
 

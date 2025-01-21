@@ -1,43 +1,18 @@
-const hamburer = document.querySelector(".hamburger");
-const navList = document.querySelector(".nav-list");
-
-if (hamburer) {
-  hamburer.addEventListener("click", () => {
-    navList.classList.toggle("open");
-  });
-}
-
-// Popup
-const popup = document.querySelector(".popup");
-const closePopup = document.querySelector(".popup-close");
-
-if (popup) {
-  closePopup.addEventListener("click", () => {
-    popup.classList.add("hide-popup");
-  });
-
-  window.addEventListener("load", () => {
-    setTimeout(() => {
-      popup.classList.remove("hide-popup");
-    }, 1000);
-  });
-}
-
-
-
-// Fungsi untuk mengambil data produk dan menampilkannya di halaman
-fetch('http://127.0.0.1:8000/api/products') // Pastikan URL ini sesuai dengan API endpoint
+// Fungsi untuk memeriksa login dan menampilkan harga produk
+fetch('http://127.0.0.1:8000/api/products')
   .then(response => response.json())
   .then(products => {
-    const productContainer = document.querySelector('.product-center'); // Tempat untuk menampilkan produk
+    const productContainer = document.querySelector('.product-center');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Periksa status login
+
+    console.log('Status login:', isLoggedIn); // Debugging
 
     products.forEach(product => {
-      // Membuat HTML untuk tiap produk
       const productItem = document.createElement('div');
       productItem.classList.add('product-item');
 
-      // Menyesuaikan dengan backend yang memberikan image_url lengkap
-      const imageUrl = product.image_url || '/images/products/default_image.jpg'; // Gambar default jika tidak ada
+      const imageUrl = product.image_url || '/images/products/default_image.jpg';
+      const displayPrice = isLoggedIn ? `Rp.${product.price}` : 'XXXXXXXXXX'; // Harga berdasarkan login
 
       productItem.innerHTML = `
         <div class="overlay">
@@ -47,7 +22,7 @@ fetch('http://127.0.0.1:8000/api/products') // Pastikan URL ini sesuai dengan AP
         </div>
         <div class="product-info">
           <a href="productDetails.html">${product.name}</a>
-          <h4>Rp.${product.price}</h4>
+          <h4>${displayPrice}</h4>
         </div>
         <ul class="icons">
           <li><i class="bx bx-heart"></i></li>
@@ -55,12 +30,15 @@ fetch('http://127.0.0.1:8000/api/products') // Pastikan URL ini sesuai dengan AP
         </ul>
       `;
 
-      // Menambahkan event listener untuk ikon keranjang
+      // Event listener untuk keranjang
       productItem.querySelector('.add-to-cart').addEventListener('click', () => {
-        addToCart(product); // Fungsi untuk menambahkan ke LocalStorage
+        if (isLoggedIn) {
+          addToCart(product);
+        } else {
+          alert('Silakan login untuk menambahkan produk ke keranjang.');
+        }
       });
 
-      // Menambahkan produk ke dalam kontainer
       productContainer.appendChild(productItem);
     });
   })
@@ -68,8 +46,17 @@ fetch('http://127.0.0.1:8000/api/products') // Pastikan URL ini sesuai dengan AP
 
 // Fungsi untuk menambahkan produk ke keranjang
 function addToCart(product) {
-  let cart = JSON.parse(localStorage.getItem('cart')) || []; // Ambil data keranjang dari LocalStorage
-  cart.push(product); // Tambahkan produk ke dalam keranjang
-  localStorage.setItem('cart', JSON.stringify(cart)); // Simpan kembali ke LocalStorage
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart.push(product);
+  localStorage.setItem('cart', JSON.stringify(cart));
   alert(`${product.name} telah ditambahkan ke keranjang!`);
 }
+
+
+document.getElementById('logoutButton').addEventListener('click', () => {
+  localStorage.removeItem('user');
+  localStorage.removeItem('isLoggedIn');
+  alert('Anda telah logout!');
+  window.location.href = 'login.html'; // Redirect ke halaman login
+});
+

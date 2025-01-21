@@ -1,4 +1,71 @@
 const categoryApiUrl = 'http://localhost:8000/api/categories';
+document.querySelectorAll(".navList").forEach(function(element) {
+  element.addEventListener('click', function() {
+    
+      // Menghilangkan kelas 'active' dari semua menu item
+      document.querySelectorAll(".navList").forEach(function(e) {
+          e.classList.remove('active');
+      });
+
+      // Menambahkan kelas 'active' pada menu yang diklik
+      this.classList.add('active');
+
+      // Mendapatkan index dari elemen yang diklik
+      var index = Array.from(this.parentNode.children).indexOf(this);
+
+      // Menyembunyikan semua data-table dan modal yang ada
+      document.querySelectorAll(".data-table").forEach(function(table) {
+          table.style.display = 'none';
+      });
+      document.querySelectorAll(".modal-overlay").forEach(function(modal) {
+          modal.style.display = 'none';
+      });
+
+      // Menampilkan bagian sesuai dengan index yang diklik
+      var tables = document.querySelectorAll(".data-table");
+      if (tables.length > index) {
+          tables[index].style.display = 'block';
+      }
+
+      // Mengambil kategori hanya jika menu Category diklik
+      if (index === 1) {
+          fetchCategories(); // Mengambil kategori saat menu "Category" diklik
+      }
+      
+      // Mengambil produk hanya jika menu Product diklik
+      if (index === 2) {
+          fetchProducts(); // Mengambil produk saat menu "Product" diklik
+      }
+
+      // Anda dapat menambahkan logika tambahan untuk menu lainnya sesuai dengan kebutuhan
+  });
+});
+
+// Fungsi untuk mengambil kategori
+async function fetchCategories() {
+  try {
+      const response = await fetch('http://localhost:8000/api/categories');
+      const data = await response.json();
+      categories = data; // Menyimpan kategori yang diambil
+  } catch (error) {
+      console.error('Error fetching categories:', error);
+  }
+}
+
+// Fungsi untuk mengambil produk
+async function fetchProducts() {
+  try {
+      const response = await fetch('http://localhost:8000/api/products');
+      const data = await response.json();
+      renderProducts(data); // Menampilkan produk dalam tabel
+  } catch (error) {
+      console.error("Error fetching products:", error);
+  }
+}
+
+
+
+
 
 //Fungsi untuk mengambil semua kategori
 async function fetchCategories() {

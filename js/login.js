@@ -15,10 +15,16 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
 
     if (response.ok) {
       alert('Login berhasil!');
+
+      // Simpan informasi pengguna dan status login ke LocalStorage
+      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('isLoggedIn', 'true');
+
+      // Redirect sesuai peran
       if (data.type === 'admin') {
         window.location.href = 'dashboard.html';
       } else if (data.type === 'supplier') {
-        window.location.href = '/supplier-dashboard.html';
+        window.location.href = 'index.html';
       }
     } else {
       alert(data.error || 'Login gagal!');

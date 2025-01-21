@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/product.css">
     <link rel="icon" href="path_to_favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/category.css">
+    <link rel="icon" href="/path/to/your/favicon.ico" type="image/x-icon">
     <title>Admin Dashboard</title>
 </head>
 
@@ -17,7 +18,7 @@
     <nav>
         <div class="logo">
             <div class="logo-image">
-                <img src="img/logo.png" alt="">
+                <img src="img/logo.png" alt="Logo">
             </div>
         </div>
         <div class="menu-items">
@@ -43,13 +44,13 @@
                 <li class="navList">
                     <a href="#">
                         <ion-icon name="heart-outline"></ion-icon>
-                        <span class="links">Report Pesanan</span>
+                        <span class="links">Order Report</span>
                     </a>
                 </li>
                 <li class="navList">
                     <a href="#">
                         <ion-icon name="chatbubbles-outline"></ion-icon>
-                        <span class="links">Report Transaksi</span>
+                        <span class="links">Transaction Report</span>
                     </a>
                 </li>
             </ul>
@@ -85,7 +86,7 @@
                     </div>
                     <div class="box box2">
                         <ion-icon name="people-outline"></ion-icon>
-                        <span class="text">Active users</span>
+                        <span class="text">Active Users</span>
                         <span class="number">2745</span>
                     </div>
                     <div class="box box3">
@@ -108,33 +109,35 @@
                     <span class="text">Recent Activities</span>
                 </div>
                 <div>
-                    <!-- Enter any table or section here -->
+                    <!-- Table or section for recent activities -->
                 </div>
             </div>
 
-            <!-- Content -->
-            <div class="data-table userDetailsTable">
+            <!-- Category Section -->
+            <div class="data-table categoryDetailsTable">
                 <div class="title">
                     <ion-icon name="folder-outline"></ion-icon>
                     <span class="text">Category</span>
                 </div>
                 
-                <!-- Tombol Tambah Kategori -->
-                <button onclick="showAddCategoryModal()" class="add-category-btn">Tambah Kategori</button>
+                <!-- Add Category Button -->
+                <button onclick="showAddCategoryModal()" class="add-category-btn">Add Category</button>
                 
                 <table id="categoryDataTable">
                     <thead>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Actions</th>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <!-- Data Kategori akan ditambahkan di sini -->
+                        <!-- Category data will be added here -->
                     </tbody>
                 </table>
             </div>
 
-            <!-- Modal Overlay untuk form Add Category -->
+            <!-- Add Category Modal -->
             <div id="addCategoryForm" class="modal-overlay">
                 <div class="modal-content">
                     <h3>Add Category</h3>
@@ -147,7 +150,7 @@
                 </div>
             </div>
 
-            <!-- Modal Overlay untuk form Edit Category -->
+            <!-- Edit Category Modal -->
             <div id="editCategoryForm" class="modal-overlay">
                 <div class="modal-content">
                     <h3>Edit Category</h3>
@@ -161,89 +164,70 @@
                 </div>
             </div>
 
-            <!-- Modal Edit Product -->
-            <div id="editProductModal" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="closeEditProductModal()">&times;</span>
-                    <h3>Edit Produk</h3>
-                    <form id="editProductForm" onsubmit="updateProduct(event)">
-                        <input type="hidden" id="editProductId">
-                        
-                        <label for="editProductName">Nama Produk:</label>
-                        <input type="text" id="editProductName" name="productName" required>
-
-                        <label for="editProductPrice">Harga Produk:</label>
-                        <input type="number" id="editProductPrice" name="productPrice" required>
-
-                        <label for="editProductCategory">Kategori Produk:</label>
-                        <select id="editProductCategory" name="productCategory" required></select>
-
-                        <label for="editProductDescription">Deskripsi Produk:</label>
-                        <textarea id="editProductDescription" name="productDescription" required></textarea>
-
-                        <button type="submit">Update</button>
-                        <button type="button" onclick="closeEditProductModal()">Batal</button>
-                    </form>
-                </div>
-            </div>
-
-            <table id="productDataTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nama</th>
-                        <th>Gambar</th>
-                        <th>Harga</th>
-                        <th>Stok</th>
-                        <th>Kategori</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data Produk akan ditambahkan di sini -->
-                </tbody>
-            </table>
-
-            <!-- Likes -->
-            <div class="data-table VehicleDetails">
+            <!-- Product Section -->
+            <div class="data-table productDetailsTable">
                 <div class="title">
-                    <ion-icon name="heart-outline"></ion-icon>
-                    <span class="text">Report Pesanan</span>
+                    <ion-icon name="analytics-outline"></ion-icon>
+                    <span class="text">Product</span>
                 </div>
-                <table id="orderDataTable">
+
+                <table id="productDataTable">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Product</th>
-                            <th>Quantity</th>
+                            <th>Name</th>
+                            <th>Image</th>
                             <th>Price</th>
-                            <th>Total Price</th>
-                            <th>Status</th>
-                            <th>Order Date</th>
+                            <th>Stock</th>
+                            <th>Category</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Data Pesanan akan ditampilkan di sini -->
+                        <!-- Product data will be added here -->
                     </tbody>
                 </table>
             </div>
 
-            <!-- Downloads section -->
-            <div style="display:none" class="data-table downloads">
+           <!-- Order Report Section -->
+<div class="data-table orderDetailsTable">
+    <div class="title">
+        <ion-icon name="heart-outline"></ion-icon>
+        <span class="text">Order Report</span>
+    </div>
+    <table id="orderDataTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Order Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Order data will be added here -->
+        </tbody>
+    </table>
+</div>
+
+
+            <!-- Transaction Report Section -->
+            <div class="data-table transactionDetailsTable" style="display:none;">
                 <div class="title">
                     <ion-icon name="chatbubbles-outline"></ion-icon>
-                    <span class="text">Report Transaksi</span>
+                    <span class="text">Transaction Report</span>
                 </div>
                 <div>
-                    <!-- Enter any table or section here -->
+                    <!-- Table or section for transaction report -->
                 </div>
             </div>
         </div>
     </section>
 
     <script src="js/admin.js"></script>
-    <script src="js/category.js"></script>
-    <script src="js/crud_product.js"></script>
     
     <!-- Sources for icons -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

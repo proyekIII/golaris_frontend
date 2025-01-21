@@ -379,3 +379,77 @@ button.delete:hover {
 
 
 
+/* Mengatur ukuran gambar produk */
+.product-image {
+    max-width: 100px;  /* Maksimal lebar gambar 100px */
+    max-height: 100px; /* Maksimal tinggi gambar 100px */
+    width: auto;       /* Agar rasio aspek gambar tetap terjaga */
+    height: auto;      /* Agar rasio aspek gambar tetap terjaga */
+}
+
+
+
+/* Mengatur gaya umum untuk tabel */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Menghilangkan jarak antar border */
+    font-family: Arial, sans-serif; /* Font yang lebih modern */
+    background-color: #f9f9f9; /* Warna latar belakang tabel */
+}
+
+/* Mengatur header tabel */
+th {
+    background-color: #580b0b; /* Warna latar belakang header tabel */
+    color: white; /* Warna teks pada header */
+    padding: 12px 15px; /* Padding untuk header */
+    text-align: left; /* Penataan teks ke kiri */
+    font-size: 14px; /* Ukuran font */
+    border-bottom: 2px solid #ddd; /* Garis bawah untuk pemisah */
+}
+
+/* Mengatur gaya untuk sel di dalam tabel */
+td {
+    padding: 12px 15px; /* Padding untuk setiap sel */
+    text-align: left; /* Penataan teks ke kiri */
+    border-bottom: 1px solid #ddd; /* Garis bawah untuk pemisah antar baris */
+    font-size: 14px; /* Ukuran font */
+}
+
+/* Menambahkan efek hover pada baris tabel */
+tr:hover {
+    background-color: #f1f1f1; /* Warna latar belakang saat hover */
+}
+
+/* Gaya untuk tombol dalam tabel */
+button {
+    background-color: #580b0b; /* Warna latar belakang tombol */
+    color: white; /* Warna teks tombol */
+    border: none; /* Menghilangkan border */
+    padding: 6px 12px; /* Padding tombol */
+    font-size: 12px; /* Ukuran font tombol */
+    cursor: pointer; /* Mengubah pointer saat hover */
+    transition: background-color 0.3s ease; /* Efek transisi untuk hover */
+    border-radius: 5px; /* Membuat tombol memiliki sudut melengkung */
+}
+
+button:hover {
+    background-color: #900; /* Warna tombol saat hover */
+}
+
+/* Styling gambar produk di tabel */
+.product-image {
+    width: 50px; /* Lebar gambar produk */
+    height: 50px; /* Tinggi gambar produk */
+    object-fit: cover; /* Memastikan gambar tidak terdistorsi */
+    border-radius: 5px; /* Membuat gambar sedikit melengkung di sudut */
+}
+
+/* Styling untuk tabel pesanan */
+#orderDataTable tbody td {
+    color: #333; /* Warna teks untuk sel dalam tabel */
+}
+
+/* Styling untuk baris yang sedang aktif */
+tr.active {
+    background-color: #e0e0e0; /* Warna latar belakang baris aktif */
+}
