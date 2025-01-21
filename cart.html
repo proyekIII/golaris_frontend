@@ -3,14 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="MID-client-VU1lGCG_XYza8AHH"></script>
+    
+
     <!-- Box icons -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+      
     />
     <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="./css/styles.css" />
     <link rel="stylesheet" href="./css/cart.css" />
+    
     <title>keranjang ku</title>
   </head>
   <body>
@@ -94,11 +100,18 @@
       </div>
       <div id="cart-items"></div>
   </div>
+
   <div class="cart-summary">
-      <div class="total-price">
-          <p>Total Harga: Rp. <span id="total-price">0</span></p>
-      </div>
-      <button id="checkout-btn" class="btn-primary">Checkout</button>
+    <div class="total-price">
+        <p>Total Harga: Rp. <span id="total-price">0</span></p>
+    </div>
+
+    <!-- Add the order summary container here -->
+    <div id="orderSummaryContainer">
+      <!-- Order summary content will be dynamically populated here -->
+    </div>
+
+    <button id="checkout-btn" class="btn-primary">Checkout</button>
   </div>
   
     

@@ -13,7 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectAllCheckbox = document.getElementById('select-all');
     const checkoutBtn = document.getElementById('checkout-btn');
     const totalPriceElement = document.getElementById('total-price');
+    const orderSummaryContainer = document.getElementById('order-summary');
+    const orderMessage = document.getElementById('order-message');
 
+    // Menampilkan cart jika ada item
     if (cartItems.length === 0) {
         cartContainer.innerHTML = '<p>Keranjang Anda kosong.</p>';
     } else {
@@ -40,7 +43,18 @@ document.addEventListener('DOMContentLoaded', () => {
             cartItems.forEach((item, index) => {
                 const checkbox = document.querySelector(`.select-item[data-index="${index}"]`);
                 if (checkbox && checkbox.checked) {
-                    totalPrice += item.price * item.quantity;
+                    const price = parseFloat(item.price); // Pastikan harga dalam angka
+                    const quantity = parseInt(item.quantity, 10); // Pastikan kuantitas dalam angka
+
+                    // Debugging log
+                    console.log(`Item: ${item.name}, Harga: ${price}, Kuantitas: ${quantity}`);
+
+                    // Pastikan harga dan kuantitas valid
+                    if (!isNaN(price) && !isNaN(quantity)) {
+                        totalPrice += price * quantity;
+                    } else {
+                        console.error(`Harga atau kuantitas tidak valid untuk item ${item.name}`);
+                    }
                 }
             });
             totalPriceElement.textContent = totalPrice.toLocaleString();
@@ -62,7 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const index = event.target.getAttribute('data-index');
                 cartItems.splice(index, 1);
                 localStorage.setItem('cart', JSON.stringify(cartItems));
-                location.reload(); // Reload halaman untuk memperbarui tampilan
+                event.target.closest('.cart-item').remove(); // Hapus item dari DOM tanpa reload
+                calculateTotalPrice(); // Update total harga setelah penghapusan
             });
         });
 
@@ -100,9 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Ambil data supplier_id dari localStorage atau sesuaikan dengan data yang ada
-            const supplierId = 1; // Misalnya supplier_id 1 untuk contoh, sesuaikan dengan data yang ada
-            const orderDate = new Date().toISOString(); // Ambil tanggal saat ini
+            // Ambil data user dari localStorage
+            const user = JSON.parse(localStorage.getItem('user'));
+            const supplierId = user && user.type === 'supplier' ? user.id : 1; // Ambil supplier_id dari data user, jika supplier
+
+            const orderDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Mengubah format ke YYYY-MM-DD HH:MM:SS
 
             // Kirim data pesanan ke API untuk setiap item yang dipilih
             const orderDataPromises = selectedItems.map(item => {
@@ -110,8 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     supplier_id: supplierId,
                     product_id: item.id,  // Pastikan 'item.id' adalah ID produk yang valid
                     quantity: item.quantity,
-                    order_date: orderDate,
+                    order_date: orderDate, // Pastikan format tanggal sudah benar
                 };
+
+                console.log('Kirim Data Pesanan:', orderData); // Debugging log untuk data pesanan
 
                 return fetch('http://127.0.0.1:8000/api/pesanan', {
                     method: 'POST',
@@ -122,25 +141,49 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then(response => {
                     if (!response.ok) {
-                        return Promise.reject('Gagal mengirim data');
+                        return response.text().then(text => { throw new Error(text); });
                     }
                     return response.json();
+                })
+                .then(data => {
+                    // Ambil snap_token dari response API
+                    if (data.snap_token) {
+                        // Lakukan redirect atau pembayaran dengan Snap token
+                        window.snap.pay(data.snap_token, {
+                            onSuccess: function(result) {
+                                console.log('Pembayaran berhasil:', result);
+                                alert('Pembayaran berhasil!');
+                                // Tampilkan ringkasan pesanan atau lakukan tindakan lainnya
+                            },
+                            onPending: function(result) {
+                                console.log('Pembayaran tertunda:', result);
+                                alert('Pembayaran tertunda!');
+                            },
+                            onError: function(result) {
+                                console.log('Pembayaran gagal:', result);
+                                alert('Pembayaran gagal!');
+                            },
+                            onClose: function() {
+                                console.log('Pembayaran ditutup');
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Terjadi kesalahan:', error);
+                    alert(`Error: ${error.message}`);
                 });
             });
 
             // Tunggu hingga semua pesanan terkirim
             Promise.all(orderDataPromises)
                 .then(results => {
-                    // Ambil snap_token dari respons pertama (asumsi semua pesanan menggunakan token yang sama)
-                    const snapToken = results[0].snap_token;
-                    if (snapToken) {
-                        window.location.href = `https://app.midtrans.com/snap/v2/v2/redirect?token=${snapToken}`;
-                    } else {
-                        alert('Terjadi kesalahan saat membuat pesanan');
-                    }
+                    console.log('Hasil Pengiriman Pesanan:', results); // Debugging log hasil pengiriman
+                    alert('Pesanan telah berhasil dikirim');
                 })
                 .catch(error => {
                     console.error('Terjadi kesalahan:', error);
+                    alert('Gagal mengirim pesanan');
                 });
         });
 

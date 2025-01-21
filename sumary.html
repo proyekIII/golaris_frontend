@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ringkasan Pesanan</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Pasakan Ambu</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="cart.html">Keranjang</a></li>
+                <li><a href="pesanan.html">Pesanan</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Ringkasan Pesanan</h2>
+        <div id="order-summary">
+            <h3>Produk yang Dipesan</h3>
+            <ul id="order-items-list"></ul>
+            <p><strong>Total Harga: Rp. <span id="total-price"></span></strong></p>
+            <p>Status: <span id="order-status">Menunggu Konfirmasi</span></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Pasakan Ambu. Semua hak dilindungi.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const orderSummaryContainer = document.getElementById('order-summary');
+            const totalPriceElement = document.getElementById('total-price');
+            const orderItemsContainer = document.getElementById('order-items');
+            const backButton = document.getElementById('back-btn');
+        
+            // Ambil data pesanan yang sudah diproses
+            const orderData = JSON.parse(localStorage.getItem('orderData')) || [];
+        
+            if (orderData.length === 0) {
+                orderItemsContainer.innerHTML = '<p>Belum ada pesanan yang dikirim.</p>';
+                totalPriceElement.textContent = 'Rp. 0';
+            } else {
+                // Tampilkan ringkasan pesanan
+                let totalPrice = 0;
+                orderData.forEach(item => {
+                    const orderItemElement = document.createElement('div');
+                    orderItemElement.classList.add('order-item');
+                    orderItemElement.innerHTML = `
+                        <img src="${item.image_url}" alt="${item.name}" class="order-item-image" />
+                        <div class="order-info">
+                            <h4>${item.name}</h4>
+                            <p>Rp.${item.price.toLocaleString()}</p>
+                            <p>Jumlah: ${item.quantity}</p>
+                            <p>Total: Rp.${(item.price * item.quantity).toLocaleString()}</p>
+                        </div>
+                    `;
+                    orderItemsContainer.appendChild(orderItemElement);
+                    totalPrice += item.price * item.quantity;
+                });
+        
+                totalPriceElement.textContent = `Rp.${totalPrice.toLocaleString()}`;
+            }
+        
+            // Tombol kembali
+            backButton.addEventListener('click', () => {
+                window.location.href = '../cart.html'; // Kembali ke halaman keranjang
+            });
+        });
+        
+    </script>
+</body>
+</html>
