@@ -165,29 +165,87 @@
             </div>
 
             <!-- Product Section -->
-            <div class="data-table productDetailsTable">
-                <div class="title">
-                    <ion-icon name="analytics-outline"></ion-icon>
-                    <span class="text">Product</span>
-                </div>
+<!-- Product Section -->
+<div class="data-table productDetailsTable">
+    <div class="title">
+        <ion-icon name="analytics-outline"></ion-icon>
+        <span class="text">Product</span>
+    </div>
 
-                <table id="productDataTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Image</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Category</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Product data will be added here -->
-                    </tbody>
-                </table>
-            </div>
+    <table id="productDataTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Product data will be added here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Tambah Produk -->
+<div id="addProductForm" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Add Product</h3>
+        <form onsubmit="addProduct(event)">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" required>
+
+            <label for="productPrice">Price:</label>
+            <input type="number" id="productPrice" required>
+
+            <label for="productStock">Stock:</label>
+            <input type="number" id="productStock" required>
+
+            <label for="productCategoryId">Category ID:</label>
+            <input type="number" id="productCategoryId" required>
+
+            <label for="productImageUrl">Product Image:</label>
+            <input type="file" id="productImageUrl" accept="image/*">
+
+            <button type="submit">Add</button>
+            <button type="button" onclick="closeAddProductModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Edit Produk -->
+<div id="editProductForm" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Edit Product</h3>
+        <form onsubmit="updateProduct(event)">
+            <input type="hidden" id="editProductId">
+
+            <label for="editProductName">Product Name:</label>
+            <input type="text" id="editProductName" required>
+
+            <label for="editProductPrice">Price:</label>
+            <input type="number" id="editProductPrice" required>
+
+            <label for="editProductStock">Stock:</label>
+            <input type="number" id="editProductStock" required>
+
+            <label for="editProductCategoryId">Category ID:</label>
+            <input type="number" id="editProductCategoryId" required>
+
+            <label for="editProductImageUrl">Product Image:</label>
+            <input type="file" id="editProductImageUrl" accept="image/*">
+
+            <button type="submit">Update</button>
+            <button type="button" onclick="closeEditProductModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+
 
            <!-- Order Report Section -->
 <div class="data-table orderDetailsTable">
