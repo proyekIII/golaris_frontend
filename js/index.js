@@ -2,12 +2,16 @@
 function displayUserName() {
   // Ambil data pengguna dari localStorage
   const user = JSON.parse(localStorage.getItem('user'));
-  console.log(user); // Debugging log untuk memastikan data pengguna ada
+
+  // Simpan supplier_id ke localStorage jika data supplier ditemukan
+  if (user) {
+    localStorage.setItem('supplier_id', user.id);
+  }
 
   // Ambil elemen dengan id 'userName', 'logoutButton', dan 'dashboardButton' di HTML
   const userNameDiv = document.getElementById('userName');
-  const logoutButton = document.getElementById('logoutButton'); // Ambil elemen logout button
-  const dashboardButton = document.getElementById('dashboardButton'); // Ambil elemen dashboard button
+  const logoutButton = document.getElementById('logoutButton');
+  const dashboardButton = document.getElementById('dashboardButton');
 
   if (user && userNameDiv) {
     // Ambil bagian username sebelum '@' dari email
@@ -38,17 +42,51 @@ function displayUserName() {
   }
 }
 
-// Panggil fungsi untuk menampilkan nama pengguna dan mengatur tombol logout serta dashboard
-displayUserName();
+// Fungsi untuk memeriksa status login
+function checkLoginStatus() {
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Periksa status login
 
-// Fungsi untuk memeriksa login dan menampilkan harga produk
+  const loginIcon = document.getElementById('loginIcon'); // Ikon login
+  const logoutButton = document.getElementById('logoutButton'); // Tombol logout
+
+  // Menampilkan/hiding elemen berdasarkan status login
+  if (isLoggedIn) {
+    loginIcon.style.display = 'none'; // Sembunyikan ikon login
+    logoutButton.style.display = 'block'; // Tampilkan tombol logout
+  } else {
+    loginIcon.style.display = 'block'; // Tampilkan ikon login
+    logoutButton.style.display = 'none'; // Sembunyikan tombol logout
+  }
+}
+
+// Fungsi untuk menangani logout
+function handleLogout() {
+  localStorage.removeItem('user');
+  localStorage.removeItem('isLoggedIn');
+  alert('Anda telah logout!');
+  window.location.href = 'login.html'; // Redirect ke halaman login
+}
+
+// Event listener untuk logout
+document.getElementById('logoutButton').addEventListener('click', handleLogout);
+
+// Event listener untuk dashboard
+document.getElementById('dashboardButton').addEventListener('click', () => {
+  window.location.href = '/dashboardsuppplier.html'; // Redirect ke halaman dashboard
+});
+
+// Panggil fungsi untuk menampilkan nama pengguna, mengatur tombol logout, dan dashboard
+document.addEventListener('DOMContentLoaded', () => {
+  displayUserName();
+  checkLoginStatus();
+});
+
+// Fetch produk dari API
 fetch('http://127.0.0.1:8000/api/products')
   .then(response => response.json())
   .then(products => {
     const productContainer = document.querySelector('.product-center');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Periksa status login
-
-    console.log('Status login:', isLoggedIn); // Debugging
 
     products.forEach(product => {
       const productItem = document.createElement('div');
@@ -94,16 +132,3 @@ function addToCart(product) {
   localStorage.setItem('cart', JSON.stringify(cart));
   alert(`${product.name} telah ditambahkan ke keranjang!`);
 }
-
-// Event listener untuk logout
-document.getElementById('logoutButton').addEventListener('click', () => {
-  localStorage.removeItem('user');
-  localStorage.removeItem('isLoggedIn');
-  alert('Anda telah logout!');
-  window.location.href = 'login.html'; // Redirect ke halaman login
-});
-
-// Event listener untuk dashboard
-document.getElementById('dashboardButton').addEventListener('click', () => {
-  window.location.href = '/dashboardsuppplier.html'; // Redirect ke halaman dashboard
-});

@@ -248,20 +248,24 @@ function updateProduct(event) {
     const price = document.getElementById("editProductPrice").value;
     const stock = document.getElementById("editProductStock").value;
     const category_id = document.getElementById("editProductCategoryId").value;
-    const imageFile = document.getElementById("editProductImageUrl").files[0];
+    // const description = document.getElementById("editProductDescription").value;  // Tambahkan untuk deskripsi jika ada
+    // const supplier_id = document.getElementById("editProductSupplierId").value;  // Tambahkan untuk supplier jika ada
 
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('price', price);
-    formData.append('stock', stock);
-    formData.append('category_id', category_id);
-    if (imageFile) {
-        formData.append('image_url', imageFile);
-    }
+    const updatedProduct = {
+        name: name,
+        price: price,
+        // description: description,
+        stock: stock,
+        category_id: category_id,
+        // supplier_id: supplier_id
+    };
 
     fetch(`${productApiUrl}/${id}`, {
         method: "PUT",
-        body: formData,
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedProduct),
     })
     .then(response => response.json())
     .then(data => {
@@ -271,6 +275,7 @@ function updateProduct(event) {
     })
     .catch(error => console.error("Error updating product:", error));
 }
+
 
 // Fungsi untuk menghapus produk
 function deleteProduct(productId) {
