@@ -330,12 +330,11 @@ function fetchOrders() {
                 orderTableBody.innerHTML = '<tr><td colspan="7">No orders found.</td></tr>';
             } else {
                 data.forEach(order => {
-                    const productName = order.product ? order.product.name : 'No product'; 
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${order.id}</td>
-                        <td>${productName}</td>
+                        <td>${order.product_name}</td>
                         <td>${order.quantity}</td>
                         <td>${order.price}</td>
                         <td>${order.total_price}</td>

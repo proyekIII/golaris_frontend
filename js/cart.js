@@ -16,6 +16,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const orderSummaryContainer = document.getElementById('order-summary');
     const orderMessage = document.getElementById('order-message');
 
+    // Fungsi untuk menghitung total harga
+    const calculateTotalPrice = () => {
+        let totalPrice = 0;
+        cartItems.forEach((item, index) => {
+            const checkbox = document.querySelector(`.select-item[data-index="${index}"]`);
+            if (checkbox && checkbox.checked) {
+                const price = parseFloat(item.price); // Pastikan harga dalam angka
+                const quantity = parseInt(item.quantity, 10); // Pastikan kuantitas dalam angka
+
+                // Pastikan harga dan kuantitas valid
+                if (!isNaN(price) && !isNaN(quantity)) {
+                    totalPrice += price * quantity;
+                } else {
+                    console.error(`Harga atau kuantitas tidak valid untuk item ${item.name}`);
+                }
+            }
+        });
+        totalPriceElement.textContent = `Rp. ${totalPrice.toLocaleString()}`; // Tampilkan total harga dengan format mata uang
+    };
+
     // Menampilkan cart jika ada item
     if (cartItems.length === 0) {
         cartContainer.innerHTML = '<p>Keranjang Anda kosong.</p>';
@@ -28,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${item.image_url}" alt="${item.name}" class="cart-item-image" />
                 <div class="cart-info">
                     <h4>${item.name}</h4>
-                    <p>Rp.${item.price.toLocaleString()}</p>
+                    <p>Rp. ${item.price.toLocaleString()}</p>
                     <button class="quantity-btn" data-index="${index}" data-action="decrease">-</button>
                     <input type="number" class="quantity-input" value="${item.quantity}" data-index="${index}" min="1" />
                     <button class="quantity-btn" data-index="${index}" data-action="increase">+</button>
@@ -37,28 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             cartContainer.appendChild(cartItem);
         });
-
-        const calculateTotalPrice = () => {
-            let totalPrice = 0;
-            cartItems.forEach((item, index) => {
-                const checkbox = document.querySelector(`.select-item[data-index="${index}"]`);
-                if (checkbox && checkbox.checked) {
-                    const price = parseFloat(item.price); // Pastikan harga dalam angka
-                    const quantity = parseInt(item.quantity, 10); // Pastikan kuantitas dalam angka
-
-                    // Debugging log
-                    console.log(`Item: ${item.name}, Harga: ${price}, Kuantitas: ${quantity}`);
-
-                    // Pastikan harga dan kuantitas valid
-                    if (!isNaN(price) && !isNaN(quantity)) {
-                        totalPrice += price * quantity;
-                    } else {
-                        console.error(`Harga atau kuantitas tidak valid untuk item ${item.name}`);
-                    }
-                }
-            });
-            totalPriceElement.textContent = totalPrice.toLocaleString();
-        };
 
         // Pilih semua item
         selectAllCheckbox.addEventListener('change', (event) => {
@@ -93,25 +91,57 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', (event) => {
                 const index = event.target.getAttribute('data-index');
                 const action = event.target.getAttribute('data-action');
+                const quantityInput = document.querySelector(`.quantity-input[data-index="${index}"]`);
+
                 if (action === 'increase') {
                     cartItems[index].quantity += 1;
                 } else if (action === 'decrease' && cartItems[index].quantity > 1) {
                     cartItems[index].quantity -= 1;
                 }
+
+                // Update nilai input quantity di DOM
+                quantityInput.value = cartItems[index].quantity;
+
+                // Simpan perubahan ke localStorage
                 localStorage.setItem('cart', JSON.stringify(cartItems));
+
+                // Hitung ulang total harga
                 calculateTotalPrice();
             });
         });
+
+        // Update kuantitas saat input diubah manual
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', (event) => {
+                const index = event.target.getAttribute('data-index');
+                const newQuantity = parseInt(event.target.value, 10);
+
+                if (newQuantity >= 1) {
+                    cartItems[index].quantity = newQuantity;
+                    localStorage.setItem('cart', JSON.stringify(cartItems));
+                    calculateTotalPrice();
+                } else {
+                    alert('Kuantitas tidak boleh kurang dari 1');
+                    event.target.value = cartItems[index].quantity; // Kembalikan ke nilai sebelumnya
+                }
+            });
+        });
+
+        // Hitung total harga saat pertama kali
+        calculateTotalPrice();
+    }
 
         // Tombol checkout
         checkoutBtn.addEventListener('click', () => {
             const selectedItems = cartItems.filter((item, index) => {
                 const checkbox = document.querySelector(`.select-item[data-index="${index}"]`);
-                return checkbox.checked;
+                // Pastikan checkbox tercentang DAN quantity valid (ada dan lebih dari 0)
+                return checkbox.checked && item.quantity && item.quantity > 0;
             });
 
             if (selectedItems.length === 0) {
-                alert('Pilih item yang ingin dipesan');
+                alert('Pilih item yang ingin dipesan dan pastikan kuantitas valid');
                 return;
             }
 
@@ -123,6 +153,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Kirim data pesanan ke API untuk setiap item yang dipilih
             const orderDataPromises = selectedItems.map(item => {
+                // Pastikan quantity valid sebelum mengirim data
+                if (!item.quantity || item.quantity < 1) {
+                    console.error('Kuantitas tidak valid untuk item:', item);
+                    alert(`Kuantitas tidak valid untuk produk: ${item.name}`);
+                    return Promise.reject('Invalid quantity');
+                }
+
                 const orderData = {
                     supplier_id: supplierId,
                     product_id: item.id,  // Pastikan 'item.id' adalah ID produk yang valid
@@ -153,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             onSuccess: function(result) {
                                 console.log('Pembayaran berhasil:', result);
                                 alert('Pembayaran berhasil!');
-                                // Tampilkan ringkasan pesanan atau lakukan tindakan lainnya
                             },
                             onPending: function(result) {
                                 console.log('Pembayaran tertunda:', result);
@@ -189,5 +225,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Hitung total harga saat pertama kali
         calculateTotalPrice();
-    }
 });
