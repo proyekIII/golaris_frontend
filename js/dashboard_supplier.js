@@ -211,11 +211,70 @@ function addProduct(event) {
     .catch(error => console.error("Error adding product:", error));
 }
 
+// URL API Produk
+
+
+// Fungsi untuk mengambil produk
+function fetchProducts() {
+    fetch(productApiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector("#productDataTable tbody");
+            tableBody.innerHTML = ''; // Bersihkan data sebelumnya
+            data.forEach(product => {
+                const categoryName = product.category_name || 'Unknown Category'; // Nama kategori produk
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td><img src="${product.image_url}" alt="Product Image" class="product-image"></td>
+                    <td>${product.price}</td>
+                    <td>${product.stock}</td>
+                    <td>${categoryName}</td>
+                    <td>
+                        <button onclick="editProduct(${product.id})">Edit</button>
+                        <button onclick="deleteProduct(${product.id})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error fetching products:', error));
+}
+
+// Fungsi untuk menambahkan produk
+function addProduct(event) {
+    event.preventDefault();
+    const name = document.getElementById("productName").value;
+    const price = document.getElementById("productPrice").value;
+    const stock = document.getElementById("productStock").value;
+    const category_id = document.getElementById("productCategoryId").value;
+    const imageFile = document.getElementById("productImageUrl").files[0];
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('price', price);
+    formData.append('stock', stock);
+    formData.append('category_id', category_id);
+    if (imageFile) {
+        formData.append('image_url', imageFile);
+    }
+
+    fetch(productApiUrl, {
+        method: "POST",
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Product added successfully!");
+        closeAddProductModal();
+        fetchProducts(); // Refresh data produk
+    })
+    .catch(error => console.error("Error adding product:", error));
+}
+
 // Fungsi untuk menampilkan modal edit produk
 function editProduct(productId) {
-    // Ganti URL dengan endpoint API Anda
-    const productApiUrl = 'http://127.0.0.1:8000/api/products';
-
     fetch(`${productApiUrl}/${productId}`)
         .then(response => {
             if (!response.ok) {
@@ -254,16 +313,12 @@ function updateProduct(event) {
     const price = document.getElementById("editProductPrice").value;
     const stock = document.getElementById("editProductStock").value;
     const category_id = document.getElementById("editProductCategoryId").value;
-    // const description = document.getElementById("editProductDescription").value;  // Tambahkan untuk deskripsi jika ada
-    // const supplier_id = document.getElementById("editProductSupplierId").value;  // Tambahkan untuk supplier jika ada
 
     const updatedProduct = {
         name: name,
         price: price,
-        // description: description,
         stock: stock,
-        category_id: category_id,
-        // supplier_id: supplier_id
+        category_id: category_id
     };
 
     fetch(`${productApiUrl}/${id}`, {
@@ -282,7 +337,6 @@ function updateProduct(event) {
     .catch(error => console.error("Error updating product:", error));
 }
 
-
 // Fungsi untuk menghapus produk
 function deleteProduct(productId) {
     if (confirm("Are you sure you want to delete this product?")) {
@@ -298,6 +352,27 @@ function deleteProduct(productId) {
         .catch(error => console.error("Error deleting product:", error));
     }
 }
+
+// Fungsi untuk menutup modal tambah produk
+function closeAddProductModal() {
+    document.getElementById("addProductForm").reset();
+    document.getElementById("addProductForm").style.display = "none";
+}
+
+// Fungsi untuk menutup modal edit produk
+function closeEditProductModal() {
+    document.getElementById("editProductForm").reset();
+    document.getElementById("editProductForm").style.display = "none";
+}
+
+
+
+
+
+
+
+
+
 
 // Fungsi untuk menutup modal tambah produk
 function closeAddProductModal() {
@@ -319,6 +394,28 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchProducts(); // Mengambil data produk
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Fungsi untuk mengambil dan menampilkan data pesanan
 function fetchOrders() {
     fetch(orderApiUrl)
@@ -330,11 +427,13 @@ function fetchOrders() {
                 orderTableBody.innerHTML = '<tr><td colspan="7">No orders found.</td></tr>';
             } else {
                 data.forEach(order => {
+                    const productName = order.product_name || 'No product'; 
+
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${order.id}</td>
-                        <td>${order.product_name}</td>
+                        <td>${productName}</td>
                         <td>${order.quantity}</td>
                         <td>${order.price}</td>
                         <td>${order.total_price}</td>
