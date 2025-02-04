@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="css/product.css">
     <link rel="icon" href="path_to_favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/category.css">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...">
+
     <link rel="icon" href="/path/to/your/favicon.ico" type="image/x-icon">
     <title>Admin Dashboard</title>
 </head>
@@ -110,32 +113,6 @@
 
             <!-- Category Section -->
             
-
-            <!-- Add Category Modal -->
-            <div id="addCategoryForm" class="modal-overlay">
-                <div class="modal-content">
-                    <h3>Add Category</h3>
-                    <form onsubmit="addCategory(event)">
-                        <label for="categoryName">Category Name:</label>
-                        <input type="text" id="categoryName" required>
-                        <button type="submit">Add</button>
-                        <button type="button" onclick="closeAddCategoryModal()">Cancel</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Edit Category Modal -->
-            <div id="editCategoryForm" class="modal-overlay">
-                <div class="modal-content">
-                    <h3>Edit Category</h3>
-                    <form onsubmit="updateCategory(event)">
-                        <input type="hidden" id="editCategoryId">
-                        <label for="editCategoryName">Category Name:</label>
-                        <input type="text" id="editCategoryName" required>
-                        <button type="submit">Update</button>
-                        <button type="button" onclick="closeEditCategoryModal()">Cancel</button>
-                    </form>
-                </div>
             </div>
 
             <!-- Product Section -->
@@ -144,6 +121,11 @@
                     <ion-icon name="analytics-outline"></ion-icon>
                     <span class="text">Product</span>
                 </div>
+                <!-- Tombol untuk membuka modal Add Product -->
+<div class="add-product-btn">
+    <button onclick="openAddProductModal()">Add Product</button>
+</div>
+
 
                 <table id="productDataTable">
                     <thead>
@@ -162,6 +144,72 @@
                     </tbody>
                 </table>
             </div>
+<!-- Add Product Modal -->
+<div id="addProductForm" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Add Product</h3>
+        <form onsubmit="addProduct(event)">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" required>
+            
+            <label for="productImage">Product Image:</label>
+            <input type="file" id="productImage" required>
+            
+            <label for="productPrice">Price:</label>
+            <input type="number" id="productPrice" required>
+            
+            <label for="productStock">Stock:</label>
+            <input type="number" id="productStock" required>
+            
+            <label for="productCategory">Category:</label>
+            <select id="productCategory" required>
+                <option value="category1">Category 1</option>
+                <option value="category2">Category 2</option>
+                <!-- Add other categories as needed -->
+            </select>
+            
+            <button type="submit">Add</button>
+            <button type="button" onclick="closeAddProductModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<!-- Add Product Modal -->
+<!-- Add Product Modal -->
+<div id="addProductForm" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Add Product</h3>
+        <form onsubmit="addProduct(event)">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" required>
+
+            <label for="productDescription">Product Description:</label>
+            <textarea id="productDescription" required></textarea>
+
+            <label for="productImage">Product Image:</label>
+            <input type="file" id="productImage" required>
+
+            <label for="productPrice">Price:</label>
+            <input type="number" id="productPrice" required>
+
+            <label for="productStock">Stock:</label>
+            <input type="number" id="productStock" required>
+
+            <label for="productCategory">Category:</label>
+            <select id="productCategory" required>
+                <!-- Kategori akan dimuat di sini -->
+            </select>
+
+            <button type="submit">Add</button>
+            <button type="button" onclick="closeAddProductModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+
 
            <!-- Order Report Section -->
 <div class="data-table orderDetailsTable">

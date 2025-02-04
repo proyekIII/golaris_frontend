@@ -49,107 +49,6 @@ const categoryApiUrl = 'http://localhost:8000/api/categories';
 // const productApiUrl = 'http://localhost:8000/api/products';
 const orderApiUrl = 'http://127.0.0.1:8000/api/pesanan'; // Gantilah dengan URL API pesanan Anda
 
-// Variabel untuk menyimpan kategori
-let categories = [];
-
-// Fungsi untuk mengambil kategori
-function fetchCategories() {
-    fetch(categoryApiUrl)
-        .then(response => response.json())
-        .then(data => {
-            categories = data; // Menyimpan kategori untuk digunakan nanti
-            const tableBody = document.querySelector("#categoryDataTable tbody");
-            tableBody.innerHTML = '';
-            data.forEach(category => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${category.id}</td>
-                    <td>${category.name}</td>
-                    <td><button onclick="editCategory(${category.id})">Edit</button><button onclick="deleteCategory(${category.id})">Delete</button></td>
-                `;
-                tableBody.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Error fetching categories:', error));
-}
-// Menambahkan kategori
-function addCategory(event) {
-    event.preventDefault();
-    const categoryName = document.getElementById("categoryName").value;
-    
-    fetch(categoryApiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: categoryName }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert("Category added successfully!");
-        closeAddCategoryModal();
-        fetchCategories(); // Refresh data kategori
-    })
-    .catch(error => console.error("Error adding category:", error));
-}
-
-// Mengedit kategori
-function editCategory(categoryId) {
-    const category = categories.find(cat => cat.id === categoryId);
-    if (category) {
-        document.getElementById("editCategoryId").value = category.id;
-        document.getElementById("editCategoryName").value = category.name;
-        document.getElementById("editCategoryForm").style.display = "block";
-    }
-}
-
-// Memperbarui kategori
-function updateCategory(event) {
-    event.preventDefault();
-    const categoryId = document.getElementById("editCategoryId").value;
-    const categoryName = document.getElementById("editCategoryName").value;
-
-    fetch(`${categoryApiUrl}/${categoryId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: categoryName }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert("Category updated successfully!");
-        closeEditCategoryModal();
-        fetchCategories(); // Refresh data kategori
-    })
-    .catch(error => console.error("Error updating category:", error));
-}
-
-// Menghapus kategori
-function deleteCategory(categoryId) {
-    if (confirm("Are you sure you want to delete this category?")) {
-        fetch(`${categoryApiUrl}/${categoryId}`, { method: "DELETE" })
-        .then(response => {
-            if (response.ok) {
-                alert("Category deleted successfully!");
-                fetchCategories(); // Refresh data kategori
-            } else {
-                alert("Failed to delete category.");
-            }
-        })
-        .catch(error => console.error("Error deleting category:", error));
-    }
-}
-
-// Fungsi untuk menutup modal
-function closeAddCategoryModal() {
-    document.getElementById("addCategoryForm").style.display = "none";
-}
-
-function closeEditCategoryModal() {
-    document.getElementById("editCategoryForm").style.display = "none";
-}
-
-function showAddCategoryModal() {
-    document.getElementById("addCategoryForm").style.display = "block";
-}
-
 
 
 // Fungsi untuk mengambil produk
@@ -181,6 +80,7 @@ function fetchProducts() {
 }
 
 // Fungsi untuk menambahkan produk
+// Menambahkan produk
 function addProduct(event) {
     event.preventDefault();
     const name = document.getElementById("productName").value;
@@ -198,7 +98,7 @@ function addProduct(event) {
         formData.append('image_url', imageFile);
     }
 
-    fetch(productApiUrl, {
+    fetch('http://127.0.0.1:8000/api/products', {
         method: "POST",
         body: formData,
     })
@@ -209,6 +109,26 @@ function addProduct(event) {
         fetchProducts(); // Refresh data produk
     })
     .catch(error => console.error("Error adding product:", error));
+}
+
+// Menambahkan kategori
+function addCategory(event) {
+    event.preventDefault();
+    const categoryName = document.getElementById("categoryName").value;
+
+    fetch('http://127.0.0.1:8000/api/categories', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: categoryName }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Category added successfully!");
+        closeAddCategoryModal();
+        fetchCategories(); // Refresh data kategori
+    })
+    .catch(error => console.error("Error adding category:", error));
+
 }
 
 // URL API Produk
@@ -393,25 +313,10 @@ function showAddProductModal() {
 document.addEventListener("DOMContentLoaded", function () {
     fetchProducts(); // Mengambil data produk
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function openAddProductModal() {
+    // Your code to open the modal goes here
+    document.getElementById('addProductModal').style.display = 'block'; // Example to show modal
+}
 
 
 
@@ -457,3 +362,204 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log('Supplier ID tidak ditemukan');
     }
 });
+
+// Fungsi untuk membuka modal
+function openAddProductModal() {
+    document.getElementById('addProductForm').style.display = 'block';
+}
+
+// Fungsi untuk menutup modal
+function closeAddProductModal() {
+    document.getElementById('addProductForm').style.display = 'none';
+}
+
+// Fungsi untuk menambahkan produk
+function addProduct(event) {
+    event.preventDefault();
+
+    // Ambil data dari form
+    const productName = document.getElementById('productName').value;
+    const productImage = document.getElementById('productImage').files[0]; // Gambar produk
+    const productPrice = document.getElementById('productPrice').value;
+    const productStock = document.getElementById('productStock').value;
+    const productCategory = document.getElementById('productCategory').value;
+
+    // Buat elemen untuk menampilkan data produk di tabel
+    const table = document.getElementById('productDataTable').getElementsByTagName('tbody')[0];
+    const newRow = table.insertRow();
+
+    newRow.innerHTML = `
+        <td>1</td> <!-- Ini bisa diganti dengan ID dinamis -->
+        <td>${productName}</td>
+        <td><img src="${URL.createObjectURL(productImage)}" alt="${productName}" width="50"></td>
+        <td>${productPrice}</td>
+        <td>${productStock}</td>
+        <td>${productCategory}</td>
+        <td>
+            <button onclick="editProduct(this)">Edit</button>
+            <button onclick="deleteProduct(this)">Delete</button>
+        </td>
+    `;
+
+    // Menutup modal setelah produk ditambahkan
+    closeAddProductModal();
+}
+
+// Fungsi untuk mengedit produk
+function editProduct(button) {
+    const row = button.parentElement.parentElement;
+    // Logika edit produk bisa ditambahkan di sini
+    console.log('Edit product:', row);
+}
+
+// Fungsi untuk menghapus produk
+function deleteProduct(button) {
+    const row = button.parentElement.parentElement;
+    row.remove();
+}
+
+
+
+
+let currentEditingRow = null;
+
+// Fungsi untuk membuka modal dengan data produk yang ada
+function openEditProductModal(row) {
+    currentEditingRow = row; // Menyimpan baris yang sedang diedit
+    const cells = row.getElementsByTagName('td');
+
+    // Memasukkan data produk yang ada ke dalam form modal
+    document.getElementById('productName').value = cells[1].textContent;
+    document.getElementById('productPrice').value = cells[3].textContent;
+    document.getElementById('productStock').value = cells[4].textContent;
+    document.getElementById('productCategory').value = cells[5].textContent;
+
+    // Menampilkan modal
+    document.getElementById('addProductForm').style.display = 'block';
+}
+
+// Fungsi untuk menutup modal
+function closeAddProductModal() {
+    document.getElementById('addProductForm').style.display = 'none';
+    currentEditingRow = null; // Reset baris yang sedang diedit
+}
+
+// Fungsi untuk menyimpan perubahan produk
+function saveEditedProduct(event) {
+    event.preventDefault();
+
+    // Ambil data dari form
+    const productName = document.getElementById('productName').value;
+    const productPrice = document.getElementById('productPrice').value;
+    const productStock = document.getElementById('productStock').value;
+    const productCategory = document.getElementById('productCategory').value;
+
+    // Perbarui baris produk dengan data yang baru
+    currentEditingRow.cells[1].textContent = productName;
+    currentEditingRow.cells[3].textContent = productPrice;
+    currentEditingRow.cells[4].textContent = productStock;
+    currentEditingRow.cells[5].textContent = productCategory;
+
+    // Menutup modal setelah menyimpan perubahan
+    closeAddProductModal();
+}
+
+// Fungsi untuk menambahkan produk baru
+// Fungsi untuk menambahkan produk melalui API
+// Fungsi untuk menambahkan produk melalui API
+async function addProduct(event) {
+    event.preventDefault();
+
+    // Ambil data user dari localStorage
+    const user = localStorage.getItem("user");
+    let supplierId = null;
+
+    if (user) {
+        const userData = JSON.parse(user); // Parse JSON ke objek
+        supplierId = userData.id; // Ambil ID Supplier dari user
+    } else {
+        console.error("Data user tidak ditemukan di localStorage.");
+        return; // Hentikan eksekusi jika tidak ada ID Supplier
+    }
+
+    const productName = document.getElementById('productName').value;
+    const productDescription = document.getElementById('productDescription').value || null;
+    const productPrice = document.getElementById('productPrice').value;
+    const productStock = document.getElementById('productStock').value;
+    const productImage = document.getElementById('productImage').files[0] || null;
+    const productCategory = document.getElementById('productCategory').value;
+
+    // Menambahkan data ke FormData
+    const formData = new FormData();
+    formData.append('name', productName);
+    formData.append('description', productDescription);
+    formData.append('price', productPrice);
+    formData.append('stock', productStock);
+    if (productImage) {
+        formData.append('image_url', productImage);
+    }
+    formData.append('supplier_id', supplierId);
+    formData.append('category_id', productCategory);
+
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/products', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+            },
+            body: formData,
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log('Product added successfully:', result);
+            alert('Produk berhasil ditambahkan!');
+        } else {
+            console.error('Error adding product:', result);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
+// Fungsi untuk mendapatkan daftar kategori
+async function getCategories() {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/categories');
+        const categories = await response.json();
+
+        if (response.ok) {
+            populateCategoryDropdown(categories);
+        } else {
+            console.error('Error fetching categories:', categories);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// Fungsi untuk mengisi dropdown kategori
+function populateCategoryDropdown(categories) {
+    const categoryDropdown = document.getElementById('productCategory');
+    categoryDropdown.innerHTML = ''; // Kosongkan dropdown terlebih dahulu
+
+    // Menambahkan opsi default
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select Category';
+    categoryDropdown.appendChild(defaultOption);
+
+    // Menambahkan kategori ke dropdown
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category.id;
+        option.textContent = category.name;
+        categoryDropdown.appendChild(option);
+    });
+}
+
+// Memanggil fungsi untuk mengambil kategori saat halaman dimuat
+document.addEventListener('DOMContentLoaded', getCategories);
+
